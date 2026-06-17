@@ -1,6 +1,6 @@
 "use server"
 
-import prisma from "@/lib/prisma"; // Ensure you have a prisma client instance
+import prisma from "@/lib/prisma"; 
 import { HabitInput, HabitSchema } from "@/lib/validation/habit"
 
 export async function createHabit(data: unknown) {
