@@ -1,0 +1,38 @@
+datasource db {
+  provider = "postgresql"
+//   url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String    // e.g., "Daughter"
+  logs      Log[]
+  createdAt DateTime  @default(now())
+}
+
+model Habit {
+  id          String   @id @default(uuid())
+  name        String
+  icon        String   // e.g., "🚲" or "🍎"
+  logs        Log[]
+  createdAt   DateTime @default(now())
+}
+
+model Log {
+  id          String   @id @default(uuid())
+  timestamp   DateTime @default(now())
+  description String?
+  scaleValue  Int      @default(5) // Validated as 1-10 in application logic
+  
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  
+  habitId     String
+  habit       Habit    @relation(fields: [habitId], references: [id])
+
+  // No unique constraint on (habitId, timestamp) to allow multiple logs per day.
+}
