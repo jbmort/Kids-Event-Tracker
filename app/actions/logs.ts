@@ -22,10 +22,11 @@ export async function createLog(data: unknown) {
         habitId: validatedData.data.habitId,
         userId: validatedData.data.userId,
         timestamp: new Date(validatedData.data.timestamp),
-        description: validatedData.data.description,
         scaleValue: validatedData.data.scaleValue,
+        description: validatedData.data.description,
       },
     });
+
     return { success: true, data: log };
   } catch (error) {
     console.error("Error creating log:", error);

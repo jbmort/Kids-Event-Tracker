@@ -15,11 +15,30 @@ export async function createHabit(data: unknown) {
       data: {
         name: validatedData.data.name,
         icon: validatedData.data.icon,
+        scaleValues: validatedData.data.scaleValues,
+        id: validatedData.data.id,
+        createdAt: validatedData.data.createdAt,
       },
-    });
+      });
     return { success: true, data: habit };
   } catch (error) {
     console.error("Error creating habit:", error);
     return { success: false, error: "Failed to create habit" };
   }
 }
+
+export async function deleteHabit(id: string) {
+  try {
+    const deletedHabit = await prisma.habit.delete({
+      where: {
+        id: id,
+      },
+    });
+    return { success: true, data: deletedHabit };
+  } catch (error) {
+    console.error("Error deleting habit:", error);
+    return { success: false, error: "Failed to delete habit" };
+  }
+}
+
+
