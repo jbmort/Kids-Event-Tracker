@@ -31,7 +31,7 @@ model Log {
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   habitId     String
-  habit       Habit    @relation(fields: [habitId], references: [id])
+  habit       Habit    @relation(fields: [habitId], references: [id], onDelete: Cascade)
 
   // No unique constraint on (habitId, timestamp) to allow multiple logs per day.
 }

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const LogSchema = z.object({
+  id: z.uuid(),
   habitId: z.uuid(),
   userId: z.uuid(),
   timestamp: z.date(),

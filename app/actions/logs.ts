@@ -33,3 +33,21 @@ export async function createLog(data: unknown) {
     return { success: false, error: "Failed to create log" };
   }
 }
+
+/**
+ * Deletes a specific log entry from the database.
+ * @param id - The unique identifier of the log record.
+ */
+export async function deleteLog(id: string) {
+  try {
+    const deletedLog = await prisma.log.delete({
+      where: {
+        id: id,
+      },
+    });
+    return { success: true, data: deletedLog };
+  } catch (error) {
+    console.error("Error deleting log:", error);
+    return { success: false, error: "Failed to delete log" };
+  }
+}
