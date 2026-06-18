@@ -8,22 +8,23 @@ import {
   isSameDay
 } from 'date-fns';
 import { getAllHabits } from "@/services/localData"
+import {Log, Habit} from "@/lib/types"
 
 // Define types for our data structure
-interface Log {
-  id: string;
-  habitId: string;
-  color: string; // The hex color of the habit (e.g., #3b82f6)
-  timestamp: Date,
-  description: string,
-  scaleValue: number,
-}
+// interface Log {
+//   id: string;
+//   habitId: string;
+//   timestamp: Date,
+//   description: string,
+//   scaleValue: number,
+// }
 
 export default function CalendarGrid() {
   // State for navigation (Month/Year)
   const [viewDate, setViewDate] = useState(new Date());
   // State for selection (The day user clicked)
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const habits = getAllHabits();
 
   /**
    * Generates an array of 42 consecutive days starting from the 
@@ -60,10 +61,11 @@ export default function CalendarGrid() {
    * 'mockLogs' would contain logs filtered for the current view.
    */
   const mockLogs: Log[] = [
-      { id: '1', habitId: 'h1', color: '#3b82f6', description: "", scaleValue: 5, timestamp: new Date()},
-      { id: '3', habitId: 'h3', color: '#22c55e', description: "", scaleValue: 3, timestamp: new Date()},
-      { id: '4', habitId: 'h4', color: '#6b7280', description: "", scaleValue: 5, timestamp: new Date()},
-      { id: '2', habitId: 'h2', color: '#ef4444', description: "", scaleValue: 5, timestamp: new Date()},
+      { userId: '1', id: '1', habitId: 'h1', description: "", scaleValue: 5, timestamp: new Date()},
+      { userId: '1', id: '3', habitId: 'h3', description: "", scaleValue: 3, timestamp: new Date() },
+      { userId: '1', id: '5', habitId: 'h5', description: "", scaleValue: 4, timestamp: new Date() },
+      { userId: '1', id: '4', habitId: 'h4', description: "", scaleValue: 5, timestamp: new Date()},
+      { userId: '1', id: '2', habitId: 'h2',  description: "", scaleValue: 5, timestamp: new Date()},
   ];
 
   // Helper to determine if a specific day has logs and return them
@@ -72,12 +74,12 @@ export default function CalendarGrid() {
     return mockLogs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
   };
 
-  const habitColor = (habitId: string) => {
-    const habit = getAllHabits().find((habit) => habit.id === habitId);
-    if(habit){
-        return habit.color;
-    }else{return "#FFF"}
-  }
+//   const habitColor = (habitId: string) => {
+//     const habit = getAllHabits().find((habit) => habit.id === habitId);
+//     if(habit){
+//         return habit.color;
+//     }else{return "#FFF"}
+//   }
 
   return (
     <div className="max-w-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
@@ -141,15 +143,20 @@ export default function CalendarGrid() {
               {/* The Summary Bar for multi-logs */}
               {hasLogs && (
                 <div className="w-full mt-1">
-                  {Array.from(new Set(logs.filter(log => log !== null).map(log => log.habitId))).map(habitId => {
-                    const habitLogs = logs.filter(log => log !== null && log.habitId === habitId);
+                
+                    
+                    {Array.from(new Set(logs.filter(log => log !== null).map(log => log.habitId))).map(habitId => {
+                    const habitLogs = logs.filter(log => log !== null && log.habitId === habitId); 
+                    const totalLogs = habitLogs.length;
+                    const habit = habits.find(h => h.id = habitId)
                     return (
-                      <div key={habitId} className="h-2 w-full rounded-full mb-0.5" style={{ backgroundColor: habitColor(habitId) }}>
-                        {habitLogs.length > 1 && (
-                    <span className="text-[8px] font-bold text-center mt-0.5">
-                            {habitLogs.length}
-                    </span>
-                  )}
+                      <div key={habitId} className="h-2 w-full rounded-full mb-0.5" style={{ backgroundColor: habit!.color }}>
+                        <span className="text-[8px] font-bold text-center mt-0.5">{habit!.name}</span>
+                        {logs.length > 1 && (
+                            <span className="text-[8px] font-bold text-center mt-0.5">
+                            {totalLogs}
+                            </span>
+                        )}
                 </div>
                     );
                   })}
@@ -162,4 +169,3 @@ export default function CalendarGrid() {
     </div>
   )}
 
-//   need to implement calendar grid in main component and create the habit selector
