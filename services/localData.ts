@@ -73,6 +73,13 @@ export function getHabitQueue(): Habit[] {
   return data ? JSON.parse(data) : [];
 }
 
+export function getAllHabits(): Habit[] {
+    const mainHabits = getHabitCache();
+    const newHabits = getHabitQueue();
+
+    return [...mainHabits, ...newHabits];
+}
+
 /**
  * Add a new/updated habit to the pending sync queue.
  * This is called when a user creates or edits a habit offline.

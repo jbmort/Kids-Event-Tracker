@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
             id: result.data.id || Math.random().toString(36).substring(2, 15),
             name: result.data.name,
             scaleValues: result.data.scaleValues,
-            icon: result.data.icon,
+            color: result.data.color,
             createdAt: result.data.createdAt,
           },
         });

@@ -4,7 +4,7 @@
 export interface Habit {
   id: string;
   name: string;
-  icon: string;
+  color: string;
   scaleValues: string[]; // Note: Stored as strings to handle various formats if needed, but we'll validate numbers for logic
   createdAt: Date;
 }
