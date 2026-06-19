@@ -3,22 +3,6 @@
 import React from 'react';
 import {Habit} from "@/lib/types"
 
-/**
- * Habit interface matches the schema.prisma model:
- * model Habit {
- *   id          String   @id @default(uuid())
- *   name        String
- *   color       String
- *   scaleValues String[] @default([])
- *   logs        Log[]
- *   createdAt   DateTime @default(now())
- * }
- */
-// export interface Habit {
-//   id: string;
-//   name: string; // Changed from 'title' to 'name' to match Prisma schema
-//   color: string; // Hex color code (e.g., "#FF5733")
-// }
 
 interface HabitSelectorProps {
   habits: Habit[];
@@ -34,6 +18,27 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
   onOpenCreateModal 
 }) => {
   const isDateSelected = !!selectedDate;
+
+  const getContrastingTextColor = (hexColor: string) => {
+    // Remove leading hash if present
+    let cleanHex = hexColor.replace(/^#/, '');
+
+    // Convert 3-digit hex to 6-digit hex
+    if (cleanHex.length === 3) {
+        cleanHex = cleanHex.split('').map(char => char + char).join('');
+    }
+
+    // Parse r, g, b values
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+
+    // Calculate YIQ brightness ratio (weights human eye color perception)
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+    // Midpoint is 128. Greater means bright background (needs black text)
+    return yiq >= 128 ? '#000000' : '#FFFFFF';
+  };
 
   return (
     <div className="flex flex-col h-full w-full max-w-md mx-auto bg-white border-l border-gray-200 shadow-lg">
@@ -67,10 +72,11 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
               className="mr-4 w-4 h-4 rounded-full border-2 border-current" 
               style={{ 
                 backgroundColor: habit.color,
-                borderColor: habit.color 
+                borderColor: habit.color,
+                color: getContrastingTextColor(habit.color),
               }} 
             />
-            <span className="text-lg font-bold text-gray-800">{habit.name}</span>
+            <span className="text-lg font-bold">{habit.name}</span>
           </button>
         ))}
 
@@ -79,7 +85,7 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
           onClick={onOpenCreateModal}
           className="w-full h-16 mt-4 px-6 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50 text-blue-600 font-bold text-lg hover:bg-blue-100 transition-colors"
         >
-          + Add New Habit
+          + Add
         </button>
       </div>
     </div>

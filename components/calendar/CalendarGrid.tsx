@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { 
   format, 
@@ -18,13 +20,17 @@ import {Log, Habit} from "@/lib/types"
 //   description: string,
 //   scaleValue: number,
 // }
+interface CalendarGridProps {
+  logs: Log[];
+  setSelectedDate: (date: Date) => void;
+  selectedDate: Date;
+  habits: Habit[];
+}
 
-export default function CalendarGrid() {
+export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDate}: CalendarGridProps) {
+
   // State for navigation (Month/Year)
-  const [viewDate, setViewDate] = useState(new Date());
-  // State for selection (The day user clicked)
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const habits = getAllHabits();
+  const [viewDate, setViewDate] = useState(selectedDate);
 
   /**
    * Generates an array of 42 consecutive days starting from the 
@@ -71,6 +77,7 @@ export default function CalendarGrid() {
   // Helper to determine if a specific day has logs and return them
    const getLogsForDay = (date: Date) => {
     const dateKey = format(date, 'yyyy-MM-dd');
+    // return logs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
     return mockLogs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
   };
 

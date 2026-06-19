@@ -1,3 +1,5 @@
+"use client";
+
 import { Log, Habit } from '@/lib/types';
 
 /**
