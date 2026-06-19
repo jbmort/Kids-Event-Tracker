@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { Log, Habit } from '@/lib/types';
 
@@ -53,6 +53,7 @@ export function moveToLocalCache(syncPayload: Log[]) {
   
   // Clear the queue as they are now safely in "Local Cache"
   localStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, JSON.stringify([]));
+  
 }
 
 /**

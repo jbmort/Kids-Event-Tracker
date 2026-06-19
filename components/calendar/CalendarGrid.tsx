@@ -9,7 +9,6 @@ import {
   isSameMonth, 
   isSameDay
 } from 'date-fns';
-import { getAllHabits } from "@/services/localData"
 import {Log, Habit} from "@/lib/types"
 
 // Define types for our data structure
@@ -77,8 +76,8 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
   // Helper to determine if a specific day has logs and return them
    const getLogsForDay = (date: Date) => {
     const dateKey = format(date, 'yyyy-MM-dd');
-    // return logs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
-    return mockLogs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
+    return logs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
+    // return mockLogs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
   };
 
 //   const habitColor = (habitId: string) => {
@@ -89,82 +88,70 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
 //   }
 
   return (
-    <div className="max-w-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-      {/* Header Section */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-slate-50">
-        <button 
-          onClick={prevMonth}
-          className="p-2 hover:bg-white rounded-full shadow-sm transition-all active:scale-90"
-          aria-label="Previous Month"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="15 19l-7-7 7-7" />
-          </svg>
+    <div className="h-full w-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col">
+      
+      {/* Header Section (Month/Year Navigation) */}
+      <div className="flex items-center justify-between p-2 border-b border-gray-100 bg-slate-50 shrink-0">
+        <button onClick={prevMonth} className="p-2 hover:bg-white rounded-full shadow-sm transition-all active:scale-90" aria-label="Previous Month">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="15 19l-7-7 7-7" /></svg>
         </button>
-        
-        <h2 className="text-xl font-bold text-gray-800">
-          {format(viewDate, 'MMMM yyyy')}
-        </h2>
-        
-        <button 
-          onClick={nextMonth}
-          className="p-2 hover:bg-white rounded-full shadow-sm transition-all active:scale-90"
-          aria-label="Next Month"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="9 5l7 7-7 7" />
-          </svg>
+        <h2 className="text-xl font-bold text-gray-800">{format(viewDate, 'MMMM yyyy')}</h2>
+        <button onClick={nextMonth} className="p-2 hover:bg-white rounded-full shadow-sm transition-all active:scale-90" aria-label="Next Month"><span></span>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="9 5l7 7-7 7" /></svg>
         </button>
       </div>
 
-      {/* Grid Section */}
-      <div className="grid grid-cols-7 bg-gray-100 gap-px border-l border-r border-gray-200">
-        {/* Day Labels */}
+      {/* Days of the Week Row */}
+      <div className="grid grid-cols-7 border-b border-gray-200 shrink-0">
         {['S','M','T','W','T','F','S'].map((day, i) => (
           <div key={i} className="text-[10px] font-bold text-center py-2 bg-gray-50 text-gray-400">
             {day}
           </div>
         ))}
+      </div>
 
-        {/* The Date Boxes */}
+      {/* The Date Boxes Grid */}
+      <div className="flex-1 grid grid-cols-7 grid-rows-6 bg-gray-100 gap-px min-h-0">
+        
         {days.map((date, index) => {
           const isCurrentMonth = isSameMonth(date, viewDate);
           const isSelected = isSameDay(date, selectedDate);
-          const logs = getLogsForDay(date);
-          const hasLogs = logs.length > 0;
+          const logsForDay = getLogsForDay(date);
+          const hasLogs = logsForDay.length > 0;
 
           return (
             <div
               key={index}
               onClick={() => setSelectedDate(date)}
               className={`
-                aspect-square flex flex-col items-center justify-center p-1 cursor-pointer transition-all
+                flex flex-col items-center p-1 cursor-pointer transition-all min-h-0
+                overflow-x-hidden
                 ${!isCurrentMonth ? 'bg-gray-50 text-gray-300' : 'bg-white'}
-                ${isSelected ? 'ring-4 ring-blue-400 z-10' : 'hover:bg-blue-50 active:scale-95'}
+                ${isSelected ? 'ring-inset ring-4 ring-blue-400 z-10' : 'hover:bg-blue-50 active:scale-95'}
               `}
             >
-              <span className={`text-lg font-semibold ${isCurrentMonth ? 'text-gray-800' : ''}`}>
+              <span className={`text-lg font-semibold shrink-0 ${isCurrentMonth ? 'text-gray-800' : ''}`}>
                 {format(date, 'd')}
               </span>
               
               {/* The Summary Bar for multi-logs */}
               {hasLogs && (
-                <div className="w-full mt-1">
-                
-                    
-                    {Array.from(new Set(logs.filter(log => log !== null).map(log => log.habitId))).map(habitId => {
-                    const habitLogs = logs.filter(log => log !== null && log.habitId === habitId); 
+                <div className="w-full mt-1 flex flex-col gap-1">
+                  {Array.from(new Set(logsForDay.filter(log => log !== null).map(log => log.habitId))).map(habitId => {
+                    const habitLogs = logsForDay.filter(log => log !== null && log.habitId === habitId); 
                     const totalLogs = habitLogs.length;
-                    const habit = habits.find(h => h.id = habitId)
+                    const habit = habits.find(h => h.id === habitId);
+                    
                     return (
-                      <div key={habitId} className="h-2 w-full rounded-full mb-0.5" style={{ backgroundColor: habit!.color }}>
-                        <span className="text-[8px] font-bold text-center mt-0.5">{habit!.name}</span>
-                        {logs.length > 1 && (
-                            <span className="text-[8px] font-bold text-center mt-0.5">
-                            {totalLogs}
-                            </span>
-                        )}
-                </div>
+                      <div 
+                        key={habitId} 
+                        className="w-full rounded-md px-1 py-0.5 flex flex-col items-center shrink-0" 
+                        style={{ backgroundColor: habit?.color || '#eee' }}
+                      >
+                        <span className="text-[9px] font-bold leading-tight text-center w-full truncate">
+                          {habit?.name} {totalLogs > 1 && `(${totalLogs})`}
+                        </span>
+                      </div>
                     );
                   })}
                 </div>
@@ -172,7 +159,9 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
             </div>
           );
         })}
-        </div>
+      </div>
     </div>
-  )}
+  );
+
+}
 
