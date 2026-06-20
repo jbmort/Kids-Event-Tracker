@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import {Habit} from "@/lib/types"
+import { getContrastingTextColor } from '@/lib/utils/utils';
 
 
 interface HabitSelectorProps {
@@ -11,13 +12,6 @@ interface HabitSelectorProps {
   onOpenCreateModal: () => void;
 };
 
-const mockHabit = {
-  id: "1",
-  name: "Mock Habit",
-  color: "#FF0000",
-  scaleValues: ["1", "2", "3", "4", "5"],
-  createdAt: new Date()
-};
 
 export const HabitSelector: React.FC<HabitSelectorProps> = ({ 
   habits, 
@@ -27,27 +21,6 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
 }) => {
   const [activeEdit, setActiveEdit] = useState<boolean>(false);
   const isDateSelected = !!selectedDate;
-
-  const getContrastingTextColor = (hexColor: string) => {
-    // Remove leading hash if present
-    let cleanHex = hexColor.replace(/^#/, '');
-
-    // Convert 3-digit hex to 6-digit hex
-    if (cleanHex.length === 3) {
-        cleanHex = cleanHex.split('').map(char => char + char).join('');
-    }
-
-    // Parse r, g, b values
-    const r = parseInt(cleanHex.substring(0, 2), 16);
-    const g = parseInt(cleanHex.substring(2, 4), 16);
-    const b = parseInt(cleanHex.substring(4, 6), 16);
-
-    // Calculate YIQ brightness ratio (weights human eye color perception)
-    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-
-    // Midpoint is 128. Greater means bright background (needs black text)
-    return yiq >= 128 ? '#000000' : '#FFFFFF';
-  };
 
   return (
     <div className="flex flex-col mx-auto h-full w-full bg-white rounded-xl shadow-lg border border-gray-200">
@@ -94,45 +67,17 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
             onClick={() => isDateSelected && onSelectHabit(habit)}
             className={`
               w-fit h-16 flex items-center px-6 rounded-xl border-2 transition-all duration-200 active:scale-95
-              ${isDateSelected 
-                ? "bg-white border-gray-200 shadow-sm" 
-                : "bg-gray-100 border-transparent opacity-50 cursor-not-allowed"}
             `}
-          >
-            {/* Color Indicator based on the 'color' field in Prisma */}
-            <div 
-              className="mr-4 w-4 h-4 rounded-full border-2 border-current" 
-              style={{ 
+            style={{ 
                 backgroundColor: habit.color,
                 borderColor: habit.color,
                 color: getContrastingTextColor(habit.color),
-              }} 
-            />
+              }}
+          >            
             <span className="text-lg font-bold">{habit.name}</span>
           </button>
         ))}
-        <button
-            key='1'
-            onClick={() => isDateSelected && onSelectHabit(mockHabit)}
-
-            className={`
-              w-fit h-16 flex items-center px-6 rounded-xl border-2 transition-all duration-200 active:scale-95
-              ${isDateSelected 
-                ? "bg-white border-gray-200 shadow-sm" 
-                : "bg-gray-100 border-transparent opacity-50 cursor-not-allowed"}
-            `}
-          >
-            {/* Color Indicator based on the 'color' field in Prisma */}
-            <div 
-              className="mr-4 w-4 h-4 rounded-full border-2 border-current" 
-              style={{ 
-                backgroundColor: 'blue',
-                borderColor: 'blue',
-                color: 'white',
-              }} 
-            />
-            <span className="text-lg font-bold">stay dry all night</span>
-          </button>
+       
       </div>
     </div>
   );

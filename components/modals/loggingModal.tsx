@@ -56,7 +56,7 @@ export default function LoggingModal({ onSuccess, onClose, habit, userId, timest
           </div>
 
           {habit.scaleValues.length > 0 && (
-            <div className="space-y-3 mb-6">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">What is it like?</label>
               <div className="relative flex flex-col">
                 {/* Label Hints Container */}

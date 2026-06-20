@@ -10,6 +10,7 @@ import {
   isSameDay
 } from 'date-fns';
 import {Log, Habit} from "@/lib/types"
+import { getContrastingTextColor } from '@/lib/utils/utils';
 
 // Define types for our data structure
 // interface Log {
@@ -74,10 +75,13 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
   // ];
 
   // Helper to determine if a specific day has logs and return them
-   const getLogsForDay = (date: Date) => {
+    const getLogsForDay = (date: Date) => {
     const dateKey = format(date, 'yyyy-MM-dd');
-    return logs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
-    // return mockLogs.map(log => log.timestamp.toISOString().split('T')[0] === dateKey ? log : null).filter(Boolean);
+    return logs.map(log => {
+      // Wrap in new Date() to ensure it's a Date object even if it's currently a string
+      const timestamp = new Date(log.timestamp);
+      return timestamp.toISOString().split('T')[0] === dateKey ? log : null;
+    }).filter(Boolean);
   };
 
 //   const habitColor = (habitId: string) => {
@@ -92,13 +96,16 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
       
       {/* Header Section (Month/Year Navigation) */}
       <div className="flex items-center justify-between p-2 border-b border-gray-100 bg-slate-50 shrink-0">
-        <button onClick={prevMonth} className="p-2 hover:bg-white rounded-full shadow-sm transition-all active:scale-90" aria-label="Previous Month">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="15 19l-7-7 7-7" /></svg>
+        <button onClick={prevMonth} className="p-2 bg-[#FFB7D5] rounded-full shadow-sm transition-all active:scale-90" aria-label="Previous Month">
+          <svg className="w-6 h-6" fill="none" stroke="#44b3e9" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
         </button>
         <h2 className="text-xl font-bold text-gray-800">{format(viewDate, 'MMMM yyyy')}</h2>
-        <button onClick={nextMonth} className="p-2 hover:bg-white rounded-full shadow-sm transition-all active:scale-90" aria-label="Next Month"><span></span>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="9 5l7 7-7 7" /></svg>
-        </button>
+        <button onClick={nextMonth} className="p-2 bg-[#FFB7D5] rounded-full shadow-sm transition-all active:scale-90" aria-label="Next Month"><span></span>
+          <svg className="w-6 h-6" fill="none" stroke="#44b3e9" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>        </button>
       </div>
 
       {/* Days of the Week Row */}
@@ -146,7 +153,7 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
                       <div 
                         key={habitId} 
                         className="w-full rounded-md px-1 py-0.5 flex flex-col items-center shrink-0" 
-                        style={{ backgroundColor: habit?.color || '#eee' }}
+                        style={{ backgroundColor: habit?.color || '#eee', color: getContrastingTextColor(habit!.color) }}
                       >
                         <span className="text-[9px] font-bold leading-tight text-center w-full truncate">
                           {habit?.name} {totalLogs > 1 && `(${totalLogs})`}

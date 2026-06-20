@@ -14,7 +14,7 @@ export async function createHabit(data: unknown) {
     const habit: HabitInput = await prisma.habit.create({
       data: {
         name: validatedData.data.name,
-        icon: validatedData.data.icon,
+        color: validatedData.data.color,
         scaleValues: validatedData.data.scaleValues,
         id: validatedData.data.id,
         createdAt: validatedData.data.createdAt,
