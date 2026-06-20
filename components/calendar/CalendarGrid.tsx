@@ -65,13 +65,13 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
    * In production, this will be replaced by a fetch from the database/cache.
    * 'mockLogs' would contain logs filtered for the current view.
    */
-  const mockLogs: Log[] = [
-      { userId: '1', id: '1', habitId: 'h1', description: "", scaleValue: 5, timestamp: new Date()},
-      { userId: '1', id: '3', habitId: 'h3', description: "", scaleValue: 3, timestamp: new Date() },
-      { userId: '1', id: '5', habitId: 'h5', description: "", scaleValue: 4, timestamp: new Date() },
-      { userId: '1', id: '4', habitId: 'h4', description: "", scaleValue: 5, timestamp: new Date()},
-      { userId: '1', id: '2', habitId: 'h2',  description: "", scaleValue: 5, timestamp: new Date()},
-  ];
+  // const mockLogs: Log[] = [
+  //     { userId: '1', id: '1', habitId: 'h1', description: "", scaleValue: 5, timestamp: new Date()},
+  //     { userId: '1', id: '3', habitId: 'h3', description: "", scaleValue: 3, timestamp: new Date() },
+  //     { userId: '1', id: '5', habitId: 'h5', description: "", scaleValue: 4, timestamp: new Date() },
+  //     { userId: '1', id: '4', habitId: 'h4', description: "", scaleValue: 5, timestamp: new Date()},
+  //     { userId: '1', id: '2', habitId: 'h2',  description: "", scaleValue: 5, timestamp: new Date()},
+  // ];
 
   // Helper to determine if a specific day has logs and return them
    const getLogsForDay = (date: Date) => {

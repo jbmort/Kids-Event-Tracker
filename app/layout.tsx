@@ -24,10 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-white text-slate-900`}>
-        {/* 
-          The viewport meta tag is handled in the metadata object above, 
-          but we ensure the body has a consistent base style.
-        */}
+       
         <main className="min-h-screen bg-gray-50">
           {children}
         </main>

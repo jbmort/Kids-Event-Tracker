@@ -1,15 +1,23 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import {Habit} from "@/lib/types"
 
 
 interface HabitSelectorProps {
   habits: Habit[];
   selectedDate?: Date | null;
-  onSelectHabit: (habitId: string) => void;
+  onSelectHabit: (habit: Habit) => void;
   onOpenCreateModal: () => void;
-}
+};
+
+const mockHabit = {
+  id: "1",
+  name: "Mock Habit",
+  color: "#FF0000",
+  scaleValues: ["1", "2", "3", "4", "5"],
+  createdAt: new Date()
+};
 
 export const HabitSelector: React.FC<HabitSelectorProps> = ({ 
   habits, 
@@ -17,6 +25,7 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
   onSelectHabit, 
   onOpenCreateModal 
 }) => {
+  const [activeEdit, setActiveEdit] = useState<boolean>(false);
   const isDateSelected = !!selectedDate;
 
   const getContrastingTextColor = (hexColor: string) => {
@@ -44,6 +53,8 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
     <div className="flex flex-col mx-auto h-full w-full bg-white rounded-xl shadow-lg border border-gray-200">
       {/* Sticky Header */}
       <div className="sticky flex flex-row justify-between align-top top-0 p-4 bg-white border-b border-gray-100 z-10 rounded-xl">
+        <div>
+
         <h2 className="text-2xl font-bold text-gray-900">
           {isDateSelected ? 'Log' : "Select a Date"}
         </h2>
@@ -52,22 +63,35 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
             Please tap a date on the calendar first
           </p>
         )}
-        
+        {activeEdit &&
+        <div>
+          <button
+            onClick={onOpenCreateModal}
+            className="w-fit max-w-fit h-10 px-2 m-2 mt-4 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50 text-blue-600 font-bold text-lg hover:bg-blue-100 transition-colors"
+          >
+            + Add New
+          </button>
+        </div>
+        }
+        </div>
+
         {/* "Add New" Action - Always visible to allow adding habits anytime */}
         <button
-          onClick={onOpenCreateModal}
-          className="w-fit max-w-fit h-10 px-2 rounded-xl border-2 border-dashed border-blue-300 bg-blue-50 text-blue-600 font-bold text-lg hover:bg-blue-100 transition-colors"
+          onClick={() => setActiveEdit(!activeEdit)}
+          className="w-fit max-w-fit h-10 px-2 rounded-xl border-2 border-blue-300 bg-blue-50 text-blue-600 font-bold text-lg hover:bg-blue-100 transition-colors"
         >
-          + New Type
+          {!activeEdit ? 'Edit' : 'Cancel'}
         </button>
-      </div>
+        </div>
+        
+   
 
       {/* Scrollable List */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[60vh] bg-gray-50/50 rounded-xl">
         {habits.map((habit) => (
           <button
             key={habit.id}
-            onClick={() => isDateSelected && onSelectHabit(habit.id)}
+            onClick={() => isDateSelected && onSelectHabit(habit)}
             className={`
               w-fit h-16 flex items-center px-6 rounded-xl border-2 transition-all duration-200 active:scale-95
               ${isDateSelected 
@@ -89,6 +113,8 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
         ))}
         <button
             key='1'
+            onClick={() => isDateSelected && onSelectHabit(mockHabit)}
+
             className={`
               w-fit h-16 flex items-center px-6 rounded-xl border-2 transition-all duration-200 active:scale-95
               ${isDateSelected 
