@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Log, Habit } from '@/lib/types';
 
 interface Props {
@@ -14,6 +14,19 @@ interface Props {
 export default function LoggingModal({ onSuccess, onClose, habit, userId, timestamp }: Props) {
   const [description, setDescription] = useState('');
   const [sliderIndex, setSliderIndex] = useState(0);
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  
+
+  useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+          onClose();
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [onClose]);
   
 
   // Helper to map the index back to a numeric value for the database
@@ -42,7 +55,10 @@ export default function LoggingModal({ onSuccess, onClose, habit, userId, timest
 
   return (
     <div className="fixed inset-0 z-100 flex items-center text-gray-800 justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md rounded-2xl shadow-2xl p-6 modal-glass">
+      <div 
+      className="w-full max-w-md rounded-2xl shadow-2xl p-6 modal-glass"
+      ref={modalRef}
+      >
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Log: {habit.name}</h2>
         
         <div className="space-y-6">

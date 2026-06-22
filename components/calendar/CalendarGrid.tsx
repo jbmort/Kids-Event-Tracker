@@ -92,24 +92,24 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
 //   }
 
   return (
-    <div className="h-full w-full rounded-xl shadow-lg overflow-hidden flex flex-col glass-style">
+    <div className="h-full w-full rounded-xl shadow-lg z-10 overflow-hidden flex flex-col glass-style-light">
       
       {/* Header Section (Month/Year Navigation) */}
-      <div className="flex items-center justify-between p-2 shrink-0 rounded-t-xl ">
-        <button onClick={prevMonth} className="p-2 bg-[#ffb7d5aa] rounded-full shadow-sm transition-all active:scale-90" aria-label="Previous Month">
+      <div className="flex items-center justify-between p-2 shrink-0 rounded-t-xl glass-style">
+        <button onClick={prevMonth} className="p-2 shadow-[inset_-2px_-2px_8px_rgba(0,0,0,0.2),inset_2px_2px_6px_rgba(255,255,255,0.4)] bg-[#ffb7d582] rounded-full  transition-all active:scale-90" aria-label="Previous Month">
           <svg className="w-6 h-6" fill="none" stroke="#44b3e9" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <h2 className="text-xl font-bold text-gray-800">{format(viewDate, 'MMMM yyyy')}</h2>
-        <button onClick={nextMonth} className="p-2 bg-[#FFB7D5aa] rounded-full shadow-sm transition-all active:scale-90" aria-label="Next Month"><span></span>
+        <button onClick={nextMonth} className="p-2 bg-[#ffb7d583] rounded-full shadow-[inset_-2px_-2px_8px_rgba(0,0,0,0.2),inset_2px_2px_6px_rgba(255,255,255,0.4)] transition-all active:scale-90" aria-label="Next Month"><span></span>
           <svg className="w-6 h-6" fill="none" stroke="#44b3e9" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>        </button>
       </div>
 
       {/* Days of the Week Row */}
-      <div className="grid grid-cols-7 shrink-0  text-gray-800 ">
+      <div className="grid grid-cols-7 shrink-0 glass-style text-gray-800 ">
         {['S','M','T','W','T','F','S'].map((day, i) => (
           <div key={i} className="text-[10px] font-bold text-center py-2">
             {day}
@@ -132,12 +132,11 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
               onClick={() => {setSelectedDate(date)}}
               className={`
                 flex flex-col items-center p-1 cursor-pointer transition-all min-h-0
-                overflow-x-hidden
-                glass-style-light
-                ${isSelected ? 'ring-inset ring-4 ring-blue-400 z-10' : ' active:scale-95'}
+                overflow-x-hidden bg-[#ffffff2c]
+                ${isSelected ? 'shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] z-10 bg-[#ffffff41]' : ' active:scale-95'}
               `}
             >
-              <span className={`text-lg font-semibold shrink-0 ${isCurrentMonth ? 'text-gray-800' : 'text-gray-300'}`}>
+              <span className={`lg:text-lg md:text-md text-sm font-semibold shrink-0 ${isCurrentMonth ? 'text-gray-800' : 'text-gray-300'}`}>
                 {format(date, 'd')}
               </span>
               

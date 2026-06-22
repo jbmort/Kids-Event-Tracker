@@ -57,9 +57,9 @@ export default function FilterBar({ habits, onFilterChange }: FilterBarProps) {
       {/* "All" button always appears first */}
       <button
         onClick={() => handleSelect('all')}
-        className={`px-4 py-2 rounded-full font-bold transition-all active:scale-95 ${
+        className={`px-4 py-2 rounded-full font-bold transition-all active:scale-95 overflow-clip ${
           selectedId == 'all'
-            ? 'bg-[#3e22f49a] text-white ring-[#3e22f49a] ring-4 ring-offset-2'
+            ? 'bg-[#3e22f49a] text-white ring-[#3e22f49a] ring-3 ring-offset-2'
             : 'bg-[#3e22f49a] text-white'
         }`}
       >
@@ -72,9 +72,9 @@ export default function FilterBar({ habits, onFilterChange }: FilterBarProps) {
           key={habit.id}
           onClick={() => handleSelect(habit.id)}
           style={{ backgroundColor: habit.color, color: getContrastingTextColor(habit.color) }}
-          className={`px-4 py-2 rounded-full font-bold transition-all active:scale-95 ${
+          className={`px-6 py-2 rounded-full font-bold transition-all active:scale-95 overflow-clip ${
             selectedId === habit.id
-              ? 'ring-4 ring-offset-2 ring-[#3e22f49a]'
+              ? 'ring-3 ring-offset-2 ring-[#3e22f49a]'
               : 'opacity-90 hover:opacity-100'
           }`}
         >

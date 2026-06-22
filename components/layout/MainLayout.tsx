@@ -139,7 +139,8 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
                     <h1 className="text-3xl font-bold text-[#3e22f49a] mb-1 ml-3 shrink-0">Body Journal</h1>
                     <button
                         onClick={toggleFilter}
-                        className="w-fit max-w-fit h-10 px-2 m-2 rounded-xl border-blue-300 text-[#3e22f49a] font-bold text-lg glass-style transition-colors"
+                        className="w-fit max-w-fit h-10 px-2 m-2 rounded-xl border-blue-300 text-[#3e22f49a]
+                         font-bold text-lg glass-style transition-colors shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)]"
                     >
                         Filter
                     </button>
@@ -152,7 +153,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
                    
                     
                     {/* The calendar container safely fills the remaining space */}
-                    <div className="flex-1 min-h-0 overflow-hidden rounded-xl">
+                    <div className="flex-1 min-h-0 overflow-hidden shadow-lg rounded-xl">
                         {children || <CalendarGrid logs={filteredLogs} habits={habitFilter} selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>}
                     </div>
                 </div>

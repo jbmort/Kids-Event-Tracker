@@ -68,7 +68,7 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
           )}
         <button
             onClick={() => setActiveEdit(!activeEdit)}
-            className="w-fit max-w-fit h-10 px-2 rounded-xl border-2 border-blue-400  text-[#3e22f49a] font-bold text-lg glass-style transition-colors"
+            className="w-fit max-w-fit h-10 px-2 rounded-xl border-2 shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] border-blue-400  text-[#3e22f49a] font-bold text-lg glass-style transition-colors"
           >
             {activeEdit ? 'Cancel' : 'Edit'}
         </button>
@@ -78,7 +78,7 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
    
         </div>  
       {/* Scrollable List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[60vh] glass-style-light ">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[60vh] ">
         {habits.map((habit) => (
           <div
             role='button'
@@ -117,7 +117,7 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
             <div className="sticky flex flex-col align-top top-0 p-2  z-10 glass-style">
               <button
                 onClick={onOpenCreateModal}
-                className="w-fit max-w-fit h-10 p-1 m-1 mt-4 rounded-xl border-2 glass-style border-blue-300  text-blue-600 font-bold text-lg transition-colors"
+                className="w-fit max-w-fit shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] h-10 p-1 m-1 mt-4 rounded-xl border-2 glass-style  text-blue-600 font-bold text-lg transition-colors"
               >
                 + Add New
               </button>
