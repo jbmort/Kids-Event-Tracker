@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: body_journal_app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@host.docker.internal:5432/Body_Journal
+      - NODE_ENV=production
+    restart: always

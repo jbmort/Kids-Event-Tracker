@@ -67,10 +67,11 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
     
     // 2. Layer subtle, highly-transparent rainbow accents on top
     backgroundImage: 
+    'linear-gradient(90deg,rgba(204, 120, 235, 1) 0%, rgba(47, 224, 237, 1) 46%, rgba(255, 136, 0, 1) 100%)',
     
     // 'conic-gradient(at 30% 40%, rgba(179, 115, 222, 0.91), rgba(191, 255, 251, 1), rgba(235, 120, 227, 1), rgba(179, 115, 222, 0.91))',
     
-    'radial-gradient(at 30% 40%,rgba(179, 115, 222, 0.91) 28%, rgba(191, 255, 251, 1) 52%, rgba(235, 120, 227, 1) 100%)',
+    // 'radial-gradient(at 30% 40%,rgba(179, 115, 222, 0.91) 28%, rgba(191, 255, 251, 1) 52%, rgba(235, 120, 227, 1) 100%)'
 
   };
 
