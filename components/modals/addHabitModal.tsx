@@ -4,15 +4,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Habit } from '@/lib/types';
 
 interface Props {
-  onSuccess: (habit: Habit) => void;
+  onSuccess: (habit: Habit, isNewHabit: boolean) => void;
   onClose: () => void;
+  habit: Habit | undefined;
 }
 
-export default function AddHabitModal({ onSuccess, onClose }: Props) {
-  const [name, setName] = useState('');
-  const [color, setColor] = useState('#3b82f6');
-  const [scaleCount, setScaleCount] = useState<number>(0);
-  const [labels, setLabels] = useState<string[]>([]);
+export default function AddHabitModal({ onSuccess, onClose, habit }: Props) {
+  const [name, setName] = useState(habit ? habit.name : '');
+  const [color, setColor] = useState(habit ? habit.color :'#3b82f6');
+  const [scaleCount, setScaleCount] = useState<number>(habit ? habit.scaleValues.length : 0);
+  const [labels, setLabels] = useState<string[]>(habit ? habit.scaleValues : []);
 
   // Validation states
   const [errors, setErrors] = useState<{ name?: string; scales?: string }>({});
@@ -45,22 +46,22 @@ export default function AddHabitModal({ onSuccess, onClose }: Props) {
     // Only proceed if no errors exist
     if (Object.keys(newErrors).length === 0) {
     const newHabit: Habit = {
-      id: crypto.randomUUID(),
+      id: habit ? habit.id : crypto.randomUUID(),
       name,
       color,
       scaleValues: labels,
-      createdAt: new Date(),
+      createdAt: habit ? new Date(habit.createdAt) : new Date(),
     };
-
-    onSuccess(newHabit);
+    const isNewHabit = habit ? false : true;
+    onSuccess(newHabit, isNewHabit);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center text-gray-800 bg-black/40 backdrop-blur-sm p-4">
       <div 
         ref={modalRef}
-        className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 border border-gray-100"
+        className=" w-full max-w-md rounded-2xl shadow-2xl p-6 modal-glass"
       >
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Add New Habit</h2>
         

@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma"; 
 import { HabitInput, HabitSchema } from "@/lib/validation/habit"
+import Error from "next/error";
 
 export async function createHabit(data: unknown) {
   const validatedData = HabitSchema.safeParse(data);
@@ -26,6 +27,26 @@ export async function createHabit(data: unknown) {
     return { success: false, error: "Failed to create habit" };
   }
 }
+
+export async function updateHabit(habitId: string, updatedData: HabitInput) {
+  try {
+    const updatedHabit = await prisma.habit.update({
+      where: {
+        id: habitId,
+      },
+      data: {
+        name: updatedData.name,
+        color: updatedData.color,
+        scaleValues: updatedData.scaleValues,
+        createdAt: updatedData.createdAt,
+      },
+    });
+    return {success: true, data: updatedHabit};
+  } catch (error : unknown) {
+    return {success: false, error: "Failed to update habit"};
+  }
+}
+   
 
 export async function deleteHabit(id: string) {
   try {

@@ -6,6 +6,7 @@ import { Log, Habit } from '@/lib/types';
 import { createLog } from '@/app/actions/logs';
 import { createHabit } from '@/app/actions/habits';
 import { fetchServerData } from '@/app/actions/dataRefresh';
+import { constants } from 'node:buffer';
 
 /**
  * Storage Keys for our two-bucket system
@@ -37,6 +38,20 @@ export function getSyncQueue(): Log[] {
   const data = localStorage.getItem(STORAGE_KEYS.SYNC_QUEUE);
   return data ? JSON.parse(data) : [];
 }
+
+/**
+ * Removes a log from the sync queue specifically. 
+ * Used when a user deletes an item that hasn't been synced yet.
+ */
+export function removeFromLogQueue(logId: string) {
+  const queue = getSyncQueue();
+  const newQueue = queue.filter((item) => item.id !== logId);
+  localStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, JSON.stringify(newQueue));
+}
+
+export function setLogCache(logs: Log[]){
+  localStorage.setItem(STORAGE_KEYS.LOCAL_CACHE, JSON.stringify(logs));
+  }
 
 export function getAllLogCache(): Log[] {
   return [...getLocalCache(), ...getSyncQueue()];
@@ -85,6 +100,18 @@ export function addToHabitQueue(payload: Habit) {
   queue.push(payload);
   localStorage.setItem(STORAGE_KEYS.HABIT_QUEUE, JSON.stringify(queue));
 }
+
+export function setHabitCache(habits: Habit[]) {
+  localStorage.setItem(STORAGE_KEYS.HABIT_CACHE, JSON.stringify(habits));
+}
+
+ export function deleteHabitSyncQueue(id: string) {
+  const habitQueue = getHabitQueue();
+  const newQueue = habitQueue.filter((h) => h.id !== id);
+  localStorage.setItem(STORAGE_KEYS.HABIT_QUEUE, JSON.stringify(newQueue));
+  }
+
+
 
 export function moveHabitsToCache(syncPayload: Habit[]) {
   const cache = getHabitCache();

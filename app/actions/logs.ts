@@ -19,6 +19,7 @@ export async function createLog(data: unknown) {
   try {
     const log: LogInput = await prisma.log.create({
       data: {
+        id: validatedData.data.id,
         habitId: validatedData.data.habitId,
         userId: validatedData.data.userId,
         timestamp: new Date(validatedData.data.timestamp),
@@ -39,14 +40,18 @@ export async function createLog(data: unknown) {
  * @param id - The unique identifier of the log record.
  */
 export async function deleteLog(id: string) {
+  console.log(id)
   try {
     const deletedLog = await prisma.log.delete({
       where: {
-        id: id,
+        id,
       },
     });
     return { success: true, data: deletedLog };
-  } catch (error) {
+    
+  } catch (error) { // Type as 'any' to access error.code
+
+    // For any other real database crashes, fail normally
     console.error("Error deleting log:", error);
     return { success: false, error: "Failed to delete log" };
   }

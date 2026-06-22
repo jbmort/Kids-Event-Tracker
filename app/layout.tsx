@@ -5,8 +5,15 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Kid-Friendly Habit Tracker',
+  title: 'Kid-Friendly Body Journal',
   description: 'A fun and easy way to track daily habits!',
+  manifest: "/manifest.json",
+
+    appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Habits",
+  },
 };
 
 export const viewport: Viewport = {
@@ -16,6 +23,7 @@ export const viewport: Viewport = {
     userScalable: false,
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -23,9 +31,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-white text-slate-900`}>
+      <head>
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+      </head>
+      <body className={`${inter.className} text-slate-900`} style={
+        {
+          backgroundColor:'#f7f9fc' 
+        }
+      }>
        
-        <main className="min-h-screen bg-gray-50">
+        <main className="min-h-screen">
           {children}
         </main>
       </body>

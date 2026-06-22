@@ -92,33 +92,33 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
 //   }
 
   return (
-    <div className="h-full w-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col">
+    <div className="h-full w-full rounded-xl shadow-lg overflow-hidden flex flex-col glass-style">
       
       {/* Header Section (Month/Year Navigation) */}
-      <div className="flex items-center justify-between p-2 border-b border-gray-100 bg-slate-50 shrink-0">
-        <button onClick={prevMonth} className="p-2 bg-[#FFB7D5] rounded-full shadow-sm transition-all active:scale-90" aria-label="Previous Month">
+      <div className="flex items-center justify-between p-2 shrink-0 rounded-t-xl ">
+        <button onClick={prevMonth} className="p-2 bg-[#ffb7d5aa] rounded-full shadow-sm transition-all active:scale-90" aria-label="Previous Month">
           <svg className="w-6 h-6" fill="none" stroke="#44b3e9" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <h2 className="text-xl font-bold text-gray-800">{format(viewDate, 'MMMM yyyy')}</h2>
-        <button onClick={nextMonth} className="p-2 bg-[#FFB7D5] rounded-full shadow-sm transition-all active:scale-90" aria-label="Next Month"><span></span>
+        <button onClick={nextMonth} className="p-2 bg-[#FFB7D5aa] rounded-full shadow-sm transition-all active:scale-90" aria-label="Next Month"><span></span>
           <svg className="w-6 h-6" fill="none" stroke="#44b3e9" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>        </button>
       </div>
 
       {/* Days of the Week Row */}
-      <div className="grid grid-cols-7 border-b border-gray-200 shrink-0">
+      <div className="grid grid-cols-7 shrink-0  text-gray-800 ">
         {['S','M','T','W','T','F','S'].map((day, i) => (
-          <div key={i} className="text-[10px] font-bold text-center py-2 bg-gray-50 text-gray-400">
+          <div key={i} className="text-[10px] font-bold text-center py-2">
             {day}
           </div>
         ))}
       </div>
 
       {/* The Date Boxes Grid */}
-      <div className="flex-1 grid grid-cols-7 grid-rows-6 bg-gray-100 gap-px min-h-0">
+      <div className="flex-1 grid grid-cols-7 grid-rows-6 gap-px min-h-0">
         
         {days.map((date, index) => {
           const isCurrentMonth = isSameMonth(date, viewDate);
@@ -129,15 +129,15 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
           return (
             <div
               key={index}
-              onClick={() => setSelectedDate(date)}
+              onClick={() => {setSelectedDate(date)}}
               className={`
                 flex flex-col items-center p-1 cursor-pointer transition-all min-h-0
                 overflow-x-hidden
-                ${!isCurrentMonth ? 'bg-gray-50 text-gray-300' : 'bg-white'}
-                ${isSelected ? 'ring-inset ring-4 ring-blue-400 z-10' : 'hover:bg-blue-50 active:scale-95'}
+                glass-style-light
+                ${isSelected ? 'ring-inset ring-4 ring-blue-400 z-10' : ' active:scale-95'}
               `}
             >
-              <span className={`text-lg font-semibold shrink-0 ${isCurrentMonth ? 'text-gray-800' : ''}`}>
+              <span className={`text-lg font-semibold shrink-0 ${isCurrentMonth ? 'text-gray-800' : 'text-gray-300'}`}>
                 {format(date, 'd')}
               </span>
               

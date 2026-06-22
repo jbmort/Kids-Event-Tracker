@@ -14,6 +14,7 @@ interface Props {
 export default function LoggingModal({ onSuccess, onClose, habit, userId, timestamp }: Props) {
   const [description, setDescription] = useState('');
   const [sliderIndex, setSliderIndex] = useState(0);
+  
 
   // Helper to map the index back to a numeric value for the database
   const getScaleMapping = (count: number): number[] => {
@@ -40,9 +41,9 @@ export default function LoggingModal({ onSuccess, onClose, habit, userId, timest
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Log Activity</h2>
+    <div className="fixed inset-0 z-100 flex items-center text-gray-800 justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md rounded-2xl shadow-2xl p-6 modal-glass">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Log: {habit.name}</h2>
         
         <div className="space-y-6">
           <div>
@@ -65,7 +66,7 @@ export default function LoggingModal({ onSuccess, onClose, habit, userId, timest
                     <span 
                       key={idx} 
                       className={`text-xs font-medium cursor-pointer transition-colors duration-200 ${
-                        idx === sliderIndex ? 'text-blue-600 font-bold scale-110' : 'text-gray-400'
+                        idx === sliderIndex ? 'text-violet-600 font-bold scale-110' : 'text-gray-400'
                       }`}
                       onClick={() => setSliderIndex(idx)}
                     >
@@ -91,13 +92,13 @@ export default function LoggingModal({ onSuccess, onClose, habit, userId, timest
           <div className="flex gap-3 pt-6 mt-4">
             <button 
               onClick={onClose}
-              className="flex-1 py-4 bg-gray-100 text-red-500 rounded-xl font-bold hover:bg-gray-200 transition-colors"
+              className="flex-1 py-4 glass-style text-red-500 rounded-xl font-bold hover:bg-gray-200 transition-colors"
             >
               Cancel
             </button>
             <button 
               onClick={handleSave}
-              className="flex-1 py-4 bg-blue-600 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-all"
+              className="flex-1 py-4 glass-style text-violet-600 rounded-xl font-bold shadow-lg active:scale-95 transition-all"
             >
               Confirm
             </button>
