@@ -14,6 +14,12 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "Habits",
   },
+  icons: {
+    icon: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
@@ -24,6 +30,8 @@ export const viewport: Viewport = {
 };
 
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,7 +40,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="apple-touch-icon" href="/icons/web-app-manifest-192x192.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body className={`${inter.className} text-slate-900`} style={
         {

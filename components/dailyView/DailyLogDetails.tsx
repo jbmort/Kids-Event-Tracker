@@ -55,7 +55,6 @@ export default function DailyLogDetails({ logs, habits, currentDay, setLogs }: D
   }
 
    const handleDelete = async (logId: string) => {
-    console.log('daily' + logId)
     if (window.confirm("Are you sure you want to delete this entry?")) {
       // If it's in the queue, it means it hasn't hit the server yet. 
       // We can remove it from local storage immediately.
@@ -98,7 +97,7 @@ export default function DailyLogDetails({ logs, habits, currentDay, setLogs }: D
       <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[60vh]">
         {logs.filter(log => {
             const date = getSafeDate(log.timestamp);
-            return date.getDay() == currentDay.getDay();
+            return date.toDateString() == currentDay.toDateString();
             }).map((log) => {
         const habit = habits.find(h => h.id === log.habitId);
         const color = getHabitColor(log.habitId);

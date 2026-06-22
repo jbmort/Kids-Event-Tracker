@@ -110,6 +110,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
         setLogs((prev) => [...prev, newLog]);
         setIsLogModalOpen(false);
         setSelectedHabitForLog(null);
+        await attemptBackgroundSync();
     };
 
     const openHabitModal = (habit: Habit | undefined) => {
