@@ -2,6 +2,10 @@
 
 A tactile, patient-centric, offline-first Progressive Web App (PWA) designed to help pediatric patients track chronic health symptoms (migraines, urinary, gastrointestinal, or other health related habits) on a tablet interface. The application generates reliable, timeline-based data representations that families can share directly with healthcare providers during clinical appointments.
 
+<p align='center'>
+<img src="./public/screenshots/Screenshot 2026-06-22 at 7.34.16 AM.png" alt="Body Journal Main Dashboard" width="30%" style="border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);" />
+  <img src="./public/screenshots/Screenshot 2026-06-22 at 7.40.09 AM.png" alt="Body Journal Main Dashboard" width="30%" style="border-radius: 8px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);" />
+</p>
 ---
 
 ## 📖 Project Context & Problem Statement
