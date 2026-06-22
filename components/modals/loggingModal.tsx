@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Log, Habit } from '@/lib/types';
+import { generateSafeUUID } from '@/lib/utils/utils';
 
 interface Props {
   onSuccess: (log: Log) => void;
@@ -40,7 +41,7 @@ export default function LoggingModal({ onSuccess, onClose, habit, userId, timest
 
   const handleSave = () => {
     const newLog: Log = {
-      id: crypto.randomUUID(),
+      id: generateSafeUUID(),
       timestamp,
       description: description || null,
       // If the habit has scale values (e.g., ["Small", "Large"]), 

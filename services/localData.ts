@@ -130,6 +130,9 @@ export function moveHabitsToCache(syncPayload: Habit[]) {
  */
 
 export async function submitLog(payload: Log) {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return false; 
+  }
   const online = navigator.onLine;
 
   if (online) {
@@ -137,9 +140,11 @@ export async function submitLog(payload: Log) {
       const result = await createLog(payload);
       if (result.success){
         moveToLocalCache([payload]);
+        setSyncSuccess();
         return { success: true, data: result.data };
       }
     } catch (e) {
+      clearSyncSuccess();
       console.warn("Online attempt failed, falling back to queue", e);
     }
   }
@@ -151,6 +156,9 @@ export async function submitLog(payload: Log) {
 }
 
 export async function submitHabit(payload: Habit) {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return false; 
+  }
   const online = navigator.onLine;
 
   if (online) {
@@ -158,9 +166,11 @@ export async function submitHabit(payload: Habit) {
       const result = await createHabit(payload);
       if (result.success){
         moveHabitsToCache([payload]);
+        setSyncSuccess();
         return { success: true, data: result.data }};
     } catch (e) {
       console.warn("Online attempt failed, falling back to queue", e);
+      clearSyncSuccess();
     }
   }
 
@@ -187,7 +197,11 @@ export const clearSyncSuccess = () => {
   localStorage.removeItem(STORAGE_KEYS.LAST_SUCCESSFUL_SYNC);
 };
 
-export const isOnline = () => navigator.onLine;
+export const isOnline = () =>{ 
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+    return false; 
+  }
+  return navigator.onLine;}
 
 export const initNetworkListeners = () => {
   window.addEventListener('offline', () => {
@@ -232,7 +246,7 @@ export const attemptBackgroundSync = async () => {
 
 export const pullDataFromServer = async (userId: string) => {
   // 1. Don't try if we are strictly offline
-  if (typeof navigator !== 'undefined' && !navigator.onLine) return null;
+  if (typeof navigator !== 'undefined' && !navigator.onLine) return;
 
   try {
     const response = await fetchServerData(userId);
@@ -243,6 +257,7 @@ export const pullDataFromServer = async (userId: string) => {
       localStorage.setItem(STORAGE_KEYS.LOCAL_CACHE, JSON.stringify(response.data.logs));
       
       // Return the fresh data so the UI can update
+      setSyncSuccess();
       return response.data;
     }
     return null;

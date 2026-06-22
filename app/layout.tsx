@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/web-app-manifest-192x192.png" />
       </head>
       <body className={`${inter.className} text-slate-900`} style={
         {

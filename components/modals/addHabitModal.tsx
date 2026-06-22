@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Habit } from '@/lib/types';
+import { generateSafeUUID } from '@/lib/utils/utils';
 
 interface Props {
   onSuccess: (habit: Habit, isNewHabit: boolean) => void;
@@ -46,7 +47,7 @@ export default function AddHabitModal({ onSuccess, onClose, habit }: Props) {
     // Only proceed if no errors exist
     if (Object.keys(newErrors).length === 0) {
     const newHabit: Habit = {
-      id: habit ? habit.id : crypto.randomUUID(),
+      id: habit ? habit.id : generateSafeUUID(),
       name,
       color,
       scaleValues: labels,
