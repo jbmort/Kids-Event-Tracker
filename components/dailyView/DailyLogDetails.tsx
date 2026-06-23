@@ -89,7 +89,7 @@ export default function DailyLogDetails({ logs, habits, currentDay, setLogs }: D
         <h2 className="text-xl font-bold pt-2 text-gray-900">Log Details</h2>
         <button
             onClick={() => setActiveEdit(!activeEdit)}
-            className="w-fit max-w-fit h-10 px-2 rounded-xl border-2 shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] glass-style text-[#3e22f49a] font-bold text-lg hover:bg-blue-100 transition-colors"
+            className="w-fit max-w-fit h-10 px-2 rounded-xl border-2 shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] glass-style text-[#3e22f49a] font-semibold text-lg hover:bg-blue-100 transition-colors"
           >
             {activeEdit ? 'Cancel' : 'Edit'}
         </button>
@@ -104,7 +104,6 @@ export default function DailyLogDetails({ logs, habits, currentDay, setLogs }: D
 
           return (
             <div key={log.id} className=" rounded-xl overflow-hidden shadow-md">
-              {/* The "Bar" - Colored based on the habit */}
               <div
                 onClick={() => setExpandedId(expandedId === log.id ? null : log.id)}
                 className={`w-full flex justify-between p-2 transition-transform active:scale-[0.98]`}

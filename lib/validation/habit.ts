@@ -5,7 +5,7 @@ export const HabitSchema = z.object({
   color: z.string().regex(/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/, {message: "Invalid hex color code.",}),
   scaleValues: z.array(z.string()),
   id: z.uuid(),
-  createdAt: z.date(),
+  createdAt: z.coerce.date(),
 });
 
 export type HabitInput = z.infer<typeof HabitSchema>;

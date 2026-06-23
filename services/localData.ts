@@ -128,57 +128,87 @@ export function moveHabitsToCache(syncPayload: Habit[]) {
  * These are the functions your UI components should call directly.
  * They handle the "Online vs Offline" logic internally.
  */
-
-export async function submitLog(payload: Log) {
+export function submitLog(payload: Log) {
+  // SSR Defense
   if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-    return false; 
-  }
-  const online = navigator.onLine;
-
-  if (online) {
-    try {
-      const result = await createLog(payload);
-      if (result.success){
-        moveToLocalCache([payload]);
-        setSyncSuccess();
-        return { success: true, data: result.data };
-      }
-    } catch (e) {
-      clearSyncSuccess();
-      console.warn("Online attempt failed, falling back to queue", e);
-    }
+    return { success: false }; 
   }
 
-  // Fallback for offline OR failed online attempts
   addToSyncQueue(payload);
-  attemptBackgroundSync(); // Try to fire immediately in case connection just returned
-  return { success: true, queued: !online }; 
+
+  attemptBackgroundSync(); 
+
+  return { success: true }; 
 }
 
-export async function submitHabit(payload: Habit) {
+
+export function submitHabit(payload: Habit) {
+  // SSR Defense
   if (typeof window === 'undefined' || typeof navigator === 'undefined') {
-    return false; 
-  }
-  const online = navigator.onLine;
-
-  if (online) {
-    try {
-      const result = await createHabit(payload);
-      if (result.success){
-        moveHabitsToCache([payload]);
-        setSyncSuccess();
-        return { success: true, data: result.data }};
-    } catch (e) {
-      console.warn("Online attempt failed, falling back to queue", e);
-      clearSyncSuccess();
-    }
+    return { success: false }; 
   }
 
-  // Fallback for offline or failed online attempts
+  // moveHabitsToCache([payload]);
+
   addToHabitQueue(payload);
+
+  // 3. FIRE-AND-FORGET: Trigger background sync (non-blocking)
   attemptBackgroundSync();
-  return { success: true, queued: !online };
+
+  return { success: true };
 }
+
+
+// export async function submitLog(payload: Log) {
+//   if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+//     return false; 
+//   }
+//   const online = navigator.onLine;
+
+//   if (online) {
+//     try {
+//       const result = await createLog(payload);
+//       if (result.success){
+//         moveToLocalCache([payload]);
+//         setSyncSuccess();
+//         return { success: true, data: result.data };
+//       }
+//     } catch (e) {
+//       clearSyncSuccess();
+//       console.warn("Online attempt failed, falling back to queue", e);
+//     }
+//   }
+
+//   // Fallback for offline OR failed online attempts
+//   addToSyncQueue(payload);
+//   attemptBackgroundSync(); // Try to fire immediately in case connection just returned
+//   return { success: true, queued: !online }; 
+// }
+
+// export async function submitHabit(payload: Habit) {
+//   if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+//     return false; 
+//   }
+//   const online = navigator.onLine;
+
+//   if (online) {
+//     try {
+//       const result = await createHabit(payload);
+//       if (result.success){
+//         moveHabitsToCache([payload]);
+//         setSyncSuccess();
+//         return { success: true, data: result.data }};
+//     } catch (e) {
+//       console.warn("Online attempt failed, falling back to queue", e);
+//       clearSyncSuccess();
+//     }
+//   }
+
+//   // Fallback for offline or failed online attempts
+//   addToHabitQueue(payload);
+//   attemptBackgroundSync();
+//   return { success: true, queued: !online };
+// }
 
 /**
  * --- SYSTEM UTILS ---
@@ -215,11 +245,14 @@ export const attemptBackgroundSync = async () => {
   const logQueueRaw = localStorage.getItem(STORAGE_KEYS.SYNC_QUEUE);
   const habitQueueRaw = localStorage.getItem(STORAGE_KEYS.HABIT_QUEUE);
 
-  // Only proceed if there is actually something in the local queues
   const hasLogs = logQueueRaw && JSON.parse(logQueueRaw).length > 0;
   const hasHabits = habitQueueRaw && JSON.parse(habitQueueRaw).length > 0;
 
   if (!hasLogs && !hasHabits) return;
+
+    // 1. Create a Timeout Controller (Forces fetch to abort after 3 seconds)
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3000); 
 
   const logQueue: Log[] = logQueueRaw ? JSON.parse(logQueueRaw) : [];
   const habitQueue: Habit[] = habitQueueRaw ? JSON.parse(habitQueueRaw) : [];
@@ -229,7 +262,10 @@ export const attemptBackgroundSync = async () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ logs: logQueue, habits: habitQueue }),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (response.ok) {
       if (logQueue.length > 0) moveToLocalCache(logQueue);
@@ -240,9 +276,11 @@ export const attemptBackgroundSync = async () => {
     }
   } catch (error) {
     clearSyncSuccess();
-    console.warn('Background sync failed, will retry next time.');
+    clearTimeout(timeoutId);
+    console.warn('Background sync failed, will retry next time.' + error);
   }
 };
+
 
 export const pullDataFromServer = async (userId: string) => {
   // 1. Don't try if we are strictly offline

@@ -28,10 +28,12 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete?")) {
+
       if(getHabitQueue().find((habit) => habit.id === id)){
           deleteHabitSyncQueue(id); 
           setHabits(habits.filter((habit) => habit.id !== id));
       }else{
+        try{
       const result = await deleteHabit(id);
         if (!result.success) {
           alert("Failed to delete. Please try again when you are connected to the server.");
@@ -41,6 +43,10 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
           setHabitCache(habitCache);
           setHabits([...habitCache, ...getHabitQueue()]);
         }
+      }catch (error) {
+        console.error("Error deleting habit:", error);
+        alert("Failed to delete. Please try again when you are connected to the server.");
+      }
       }
     } 
     setActiveEdit(false);
@@ -58,7 +64,7 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
       {/* Sticky Header */}
       <div className="sticky flex flex-col align-top top-0 p-2 glass-style z-10 rounded-t-xl">
         <div className='flex justify-between'>
-          <h2 className="text-xl font-bold text-gray-900 p-2">
+          <h2 className="text-xl font-semibold text-gray-900 p-2">
             {activeEdit ? 'Select to Update' : isDateSelected ? 'Log' : "Select a Date"}
           </h2>
           {!isDateSelected && (
@@ -114,10 +120,12 @@ export const HabitSelector: React.FC<HabitSelectorProps> = ({
 
       </div>
        {activeEdit && (
-            <div className="sticky flex flex-col align-top top-0 p-2  z-10 glass-style">
+            <div className="sticky flex flex-col align-top top-0 p-2 p-x-4 z-10 glass-style">
               <button
-                onClick={onOpenCreateModal}
-                className="w-fit max-w-fit shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] h-10 p-1 m-1 mt-4 rounded-xl border-2 glass-style  text-blue-600 font-bold text-lg transition-colors"
+                onClick={() => {
+                  onOpenCreateModal(); 
+                  setActiveEdit(false) }}
+                className=" text-[#3e22f49a] shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] h-10 p-1 m-1 mt-4 rounded-xl border-2 glass-style  font-bold text-lg transition-colors"
               >
                 + Add New
               </button>

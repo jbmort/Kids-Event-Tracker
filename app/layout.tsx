@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Kid-Friendly Body Journal',
@@ -43,11 +41,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={`${inter.className} text-slate-900`} style={
-        {
-          backgroundColor:'#f7f9fc' 
-        }
-      }>
+      <body className={'text-slate-900'} >
        
         <main className="min-h-screen">
           {children}

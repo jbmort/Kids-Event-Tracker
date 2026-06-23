@@ -62,10 +62,8 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
     }, []);
 
     const divStyle = {
-    // 1. Establish your base anchor color
     backgroundColor: '#ecadda',
     
-    // 2. Layer subtle, highly-transparent rainbow accents on top
     backgroundImage: 
     'linear-gradient(90deg,rgba(204, 120, 235, 1) 0%, rgba(47, 224, 237, 1) 46%, rgba(255, 136, 0, 1) 100%)',
     
@@ -91,26 +89,64 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
         setActiveFilter(!activeFilter);
     }
 
-     const handleAddHabitSuccess = async (newHabit: Habit, isNew: boolean) => {
-        if(isNew){
-            await submitHabit(newHabit);
-            setHabits((prev) => [...prev, newHabit]);
-        }else{
-            await updateHabit(newHabit.id, newHabit);
-            const otherHabits = habits.filter((habit) => habit.id !== newHabit.id)
-            setHabits([...otherHabits, ...[newHabit]]);
-        }
-        setHabitFilter(habits);
-        setIsAddHabitModalOpen(false);
-        await pullDataFromServer(USER_ID);
-    };
+    //  const handleAddHabitSuccess = async (newHabit: Habit, isNew: boolean) => {
+    //     if(isNew){
+    //         await submitHabit(newHabit);
+    //         setHabits((prev) => [...prev, newHabit]);
+    //     }else{
+    //         await updateHabit(newHabit.id, newHabit);
+    //         const otherHabits = habits.filter((habit) => habit.id !== newHabit.id)
+    //         setHabits([...otherHabits, ...[newHabit]]);
+    //     }
+    //     setIsAddHabitModalOpen(false);
+    //     await pullDataFromServer(USER_ID);
+    // };
 
-     const handleLogSuccess = async (newLog: Log) => {
-        await submitLog(newLog);
+    const handleAddHabitSuccess = (newHabit: Habit, isNew: boolean) => {
+        if (isNew) {
+            submitHabit(newHabit);
+        } else {
+            updateHabit(newHabit.id, newHabit);
+        }
+
+        // 2. Compute the updated habits list immediately to avoid React state batching delays
+        const updatedHabits = isNew
+            ? [...habits, newHabit]
+            : [...habits.filter((habit) => habit.id !== newHabit.id), newHabit];
+
+        // 3. Update the UI states instantly
+        setHabits(updatedHabits);
+        setHabitFilter(updatedHabits);
+        setIsAddHabitModalOpen(false);
+
+        // 4. FIRE-AND-FORGET: Pull from server in the background.
+        // We use .then() instead of await so the UI never blocks while waiting for the network!
+        pullDataFromServer(USER_ID).then((freshData) => {
+        if (freshData) {
+            // Silently refresh the UI with the server truth once it resolves
+            setHabits(freshData.habits);
+            setHabitFilter(freshData.habits);
+            setLogs(freshData.logs);
+        }
+    });
+};
+
+
+    //  const handleLogSuccess = async (newLog: Log) => {
+    //     await submitLog(newLog);
+    //     setLogs((prev) => [...prev, newLog]);
+    //     setIsLogModalOpen(false);
+    //     setSelectedHabitForLog(null);
+    //     await attemptBackgroundSync();
+    // };
+
+    const handleLogSuccess = (newLog: Log) => {
+        submitLog(newLog);
+
+        // Update UI states instantly
         setLogs((prev) => [...prev, newLog]);
         setIsLogModalOpen(false);
         setSelectedHabitForLog(null);
-        await attemptBackgroundSync();
     };
 
     const openHabitModal = (habit: Habit | undefined) => {
@@ -135,7 +171,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
         <main className="h-dvh w-full  overflow-hidden flex flex-col lg:flex-row" style={divStyle} >
             
             {/* Main Content Area (Calendar) */}
-            <section className="flex-1 flex flex-col min-h-0 ml-0 min-w-0 p-1  rounded-r-xl m-2  ">
+            <section className="flex-1 flex flex-col min-h-0 ml-0 min-w-3/4 p-1  rounded-r-xl  ">
                 <div className="w-full max-w-7xl mx-auto flex flex-col h-full">
                     <div className='flex flex-row justify-between'>
                     <h1 className="text-3xl font-bold text-[#3e22f49a] mb-1 ml-3 shrink-0">Body Journal</h1>
@@ -163,10 +199,10 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
 
             {/* Side Panel (Habit Menu) */}
             {/* w-full in portrait, fixed width (lg:w-80 or w-96) in landscape. shrink-0 prevents it from being squished */}
-            <aside className="w-full lg:w-80 xl:w-96 shrink-0 p-1 flex flex-col min-h-0 max-h-[35vh] lg:max-h-none overflow-hidden">                
+            <aside className="w-full xl:w-96 shrink-0 p-1 max-h-1/4 lg:max-h-none flex flex-1 flex-col min-h-0 overflow-hidden">                
                 {/* <div className="flex-1 w-full overflow-y-auto pr-2 rounded-xl"> */}
-                <div className="flex landscape:flex-col portrait:flex-row h-full">
-                    <div className="landscape:flex-2 portrait:flex-1 w-full overflow-y-auto pr-2 rounded-xl p-1">
+                <div className="flex lg:flex-col flex-row w-full h-full">
+                    <div className="lg:flex-2 flex-1 w-full overflow-y-auto pr-2 rounded-xl p-1">
                         <HabitSelector 
                             openEditModal={openHabitModal}
                             habits={habits} 
