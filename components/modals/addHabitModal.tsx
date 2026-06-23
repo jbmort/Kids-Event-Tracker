@@ -59,7 +59,7 @@ export default function AddHabitModal({ onSuccess, onClose, habit }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center text-gray-800 bg-black/40 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center text-gray-800 p-4">
       <div 
         ref={modalRef}
         className=" w-full max-w-md rounded-2xl shadow-2xl p-6 modal-glass"

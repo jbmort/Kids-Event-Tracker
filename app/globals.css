@@ -27,7 +27,6 @@ body {
 
 .glass-style {
   background: rgba(255, 255, 255, 0.157);
-  /* box-shadow: 0 4px 30px rgba(0, 0, 0, 0.16); */
   backdrop-filter: blur(12.1px);
   -webkit-backdrop-filter: blur(12.1px);
   border: 1px solid rgba(248, 151, 243, 0.1);
@@ -38,14 +37,12 @@ body {
   background: rgba(255, 255, 255, 0.118);
   backdrop-filter: blur(1.1px);
   -webkit-backdrop-filter: blur(1.1px); 
-  /* border: 1px solid rgba(235, 234, 235, 0.199); */
 }
 
 .modal-glass {
-  background: rgba(255, 255, 255, 0.703);
-  backdrop-filter: blur(12.1px);
-  -webkit-backdrop-filter: blur(12.1px);
-  border: 1px solid rgba(250, 207, 248, 0.495);
+  background: rgba(255, 255, 255, 0.603);
+  backdrop-filter: blur(20.1px);
+  -webkit-backdrop-filter: blur(20.1px);
 }
 
 .label-text {

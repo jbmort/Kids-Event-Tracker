@@ -28,31 +28,42 @@ export default function DailyLogDetails({ logs, habits, currentDay, setLogs }: D
     return habit?.color || '#3b82f6'; // Default blue if not found
   };
 
-  const getValue = (habit: Habit, log : Log) => {
-    let value = "";
-
-    if(habit.scaleValues.length > 1 && log.scaleValue){
-        const length = habit.scaleValues.length;
-
-        if(length === 2){
-            switch (log.scaleValue){
-                case 1: value = habit.scaleValues[0];
-                case 10: value = habit.scaleValues[1];
-            }
-        }else if(length === 5){
-            switch (log.scaleValue){
-                case 1: value = habit.scaleValues[0];
-                case 3: value = habit.scaleValues[1];
-                case 5: value = habit.scaleValues[2];
-                case 7: value = habit.scaleValues[3];
-                case 10: value = habit.scaleValues[4];
-            }
-        }else if(length === 10){
-            value = habit.scaleValues[log.scaleValue - 1];
-        }
+ const getValue = (habit: Habit, log: Log) => {
+    // 1. Safety check: Ensure we have scale values and a log value
+    if (habit.scaleValues.length <= 1 || !log.scaleValue) {
+      return "";
     }
-        return value;
-  }
+
+    const length = habit.scaleValues.length;
+
+    // 2. Binary scale (2 options)
+    if (length === 2) {
+      switch (log.scaleValue) {
+        case 1: return habit.scaleValues[0];
+        case 10: return habit.scaleValues[1];
+        default: return ""; // Fallback
+      }
+    }
+
+    // 3. 5-Option scale
+    if (length === 5) {
+      switch (log.scaleValue) {
+        case 1: return habit.scaleValues[0];
+        case 3: return habit.scaleValues[1];
+        case 5: return habit.scaleValues[2]; // Will return immediately and exit!
+        case 7: return habit.scaleValues[3];
+        case 10: return habit.scaleValues[4];
+        default: return "";
+      }
+    }
+
+    // 4. 10-Option scale
+    if (length === 10) {
+      return habit.scaleValues[log.scaleValue - 1] || "";
+    }
+
+    return "";
+  };
 
    const handleDelete = async (logId: string) => {
     if (window.confirm("Are you sure you want to delete this entry?")) {
