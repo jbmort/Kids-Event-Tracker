@@ -55,9 +55,9 @@ export default function LoggingModal({ onSuccess, onClose, habit, userId, timest
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center text-gray-800 justify-center p-4">
+    <div className="fixed inset-0 z-100 flex items-center text-gray-800  justify-center p-4">
       <div 
-      className="w-full max-w-md rounded-2xl shadow-2xl p-6 modal-glass"
+      className="w-full max-w-md rounded-2xl shadow-2xl p-6 backdrop-blur-md modal-glass"
       ref={modalRef}
       >
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Log: {habit.name}</h2>

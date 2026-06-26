@@ -6,11 +6,10 @@ export const metadata: Metadata = {
   title: 'Kid-Friendly Body Journal',
   description: 'A fun and easy way to track daily habits!',
   manifest: "/manifest.json",
-
-    appleWebApp: {
+  appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Habits",
+    title: "Body Journal",
   },
   icons: {
     icon: "/favicon.ico",

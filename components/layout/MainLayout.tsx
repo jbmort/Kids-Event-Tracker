@@ -13,46 +13,53 @@ import { updateHabit } from '@/app/actions/habits';
 
 export default function MainLayout({ children }: { children?: React.ReactNode }) {
     const USER_ID = '1';
+    
+    // 1. Add this state variable for server connection status
     const [isMounted, setIsMounted] = useState(false);
+    const [isServerConnected, setIsServerConnected] = useState(false); // <-- CHANGE TO STATE
 
+    // Initialize all states as empty
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [habits, setHabits] = useState<Habit[]>([]);
     const [logs, setLogs] = useState<Log[]>([]);
     const [habitFilter, setHabitFilter] = useState<Habit[]>([]);
-    
     const [isAddHabitModalOpen, setIsAddHabitModalOpen] = useState(false);
     const [isLogModalOpen, setIsLogModalOpen] = useState(false);
     const [selectedHabitForLog, setSelectedHabitForLog] = useState<Habit | null>(null);
     const [activeFilter, setActiveFilter] = useState<boolean>(false);
     const [formHabit, setFormHabit] = useState<Habit | undefined>(undefined);
 
-
     useEffect(() => {
-        // Load data from localStorage
+        // Load data from localStorage safely inside the effect
         const loadedHabits = getAllHabits();
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setHabits(loadedHabits);
         setHabitFilter(loadedHabits);
         setLogs(getAllLogCache());
+        
+        // 2. NOW it is safe to check the network status and set the state!
+        setIsServerConnected(isOnline() && hasSuccessfulSync());
+        
         // We are officially mounted on the iPad!
         setIsMounted(true);
         
-       const initializeSync = async () => {
-        await attemptBackgroundSync();
-        
-        const freshData = await pullDataFromServer(USER_ID);
-        
-        if (freshData?.habits !== habits || freshData?.logs !== logs) {
-            if(freshData?.habits){
-                setHabits(freshData.habits);
-                setHabitFilter(freshData.habits); 
-            }else if(freshData?.logs){
-                setLogs(freshData.logs);
-            } 
-        }
+        const initializeSync = async () => {
+            await attemptBackgroundSync();
+            
+            const freshData = await pullDataFromServer(USER_ID);
+            
+            // Check if server data actually differs before updating state (prevents infinite rerender loops)
+            if (freshData) {
+                if (JSON.stringify(freshData.habits) !== JSON.stringify(habits)) {
+                    setHabits(freshData.habits);
+                    setHabitFilter(freshData.habits); 
+                }
+                if (JSON.stringify(freshData.logs) !== JSON.stringify(logs)) {
+                    setLogs(freshData.logs);
+                }
+            }
         };
 
-         // Sync Logic
+        // Sync Logic
         initializeSync();
         window.addEventListener('online', attemptBackgroundSync);
         
@@ -78,7 +85,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
             habitFilter.some(h => h.id === log.habitId));
         }, [logs, habitFilter]);
 
-    const isServerConnected = isOnline() && hasSuccessfulSync();
+    // const isServerConnected = isOnline() && hasSuccessfulSync();
 
     const selectHabit = (habit: Habit) => {
       setSelectedHabitForLog(habit);

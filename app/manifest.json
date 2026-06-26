@@ -2,13 +2,14 @@
   "name": "Body Journal",
   "short_name": "Habits",
   "description": "Offline-first visual body journal for kids.",
+  "id": "/",
+  "scope": "/",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ed85ee",
   "theme_color": "#66edef",
   "orientation": "any",
   "icons": [
-    
     {
       "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
@@ -32,6 +33,21 @@
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
+    }
+  ],
+  
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile_screenshot.png",
+      "sizes": "566x1264",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/desktop_screenshot.png",
+      "sizes": "1772x1238",
+      "type": "image/png",
+      "form_factor": "wide"
     }
   ]
  

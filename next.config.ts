@@ -3,11 +3,12 @@ import withPWAInit from '@ducanh2912/next-pwa';
 
 const withPWA = withPWAInit({
   dest: 'public',              
-  disable: process.env.NODE_ENV === 'development',
+  // Switch back to `process.env.NODE_ENV === 'development'` for normal coding.
+  disable: false, 
   register: true,           
 });
 
-module.exports = {
+const nextConfig: NextConfig = {
   turbopack: {
     rules: {
       '*.svg': {
@@ -16,10 +17,7 @@ module.exports = {
       },
     },
   },
-}
 
-const nextConfig: NextConfig = {
-  /* config options here */
 };
 
 export default withPWA(nextConfig);

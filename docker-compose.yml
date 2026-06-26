@@ -1,12 +1,38 @@
-version: '3.8'
-
 services:
   web:
     build: .
     container_name: body_journal_app
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     environment:
       - DATABASE_URL=postgresql://postgres:password@host.docker.internal:5432/Body_Journal
       - NODE_ENV=production
     restart: always
+    networks:
+      - proxy-net
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: local_https_proxy
+    restart: always
+    ports:
+      - "3001:3001"
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+    networks:
+      - proxy-net
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  proxy-net:
+    driver: bridge

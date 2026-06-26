@@ -1,0 +1,10 @@
+{
+    # Forces Caddy to serve the cert when the browser doesn't send SNI
+    default_sni Jacobs-MacBook-Pro.local
+}
+
+https://Jacobs-MacBook-Pro.local:3001 {
+    reverse_proxy web:3000
+    
+    tls internal
+}
