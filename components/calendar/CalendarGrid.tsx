@@ -74,13 +74,17 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
   //     { userId: '1', id: '2', habitId: 'h2',  description: "", scaleValue: 5, timestamp: new Date()},
   // ];
 
+  const getSafeDate = (ts: string | number | Date): Date => {
+    return new Date(ts);
+  };
+
   // Helper to determine if a specific day has logs and return them
     const getLogsForDay = (date: Date) => {
     const dateKey = format(date, 'yyyy-MM-dd');
     return logs.map(log => {
       // Wrap in new Date() to ensure it's a Date object even if it's currently a string
-      const timestamp = new Date(log.timestamp);
-      return timestamp.toISOString().split('T')[0] === dateKey ? log : null;
+      const timestamp = getSafeDate(log.timestamp);
+      return timestamp.toDateString() === date.toDateString() ? log : null;
     }).filter(Boolean);
   };
 
