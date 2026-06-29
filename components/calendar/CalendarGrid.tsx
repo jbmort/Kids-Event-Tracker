@@ -27,6 +27,18 @@ interface CalendarGridProps {
   habits: Habit[];
 }
 
+// Helper to get compact text (first emoji or character) of a name
+const getCompactName = (name?: string) => {
+  if (!name) return "";
+  try {
+    const segmenter = new Intl.Segmenter();
+    const segments = Array.from(segmenter.segment(name));
+    return segments[0]?.segment || name.charAt(0);
+  } catch (e) {
+    return name.charAt(0);
+  }
+};
+
 export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDate}: CalendarGridProps) {
 
   // State for navigation (Month/Year)
@@ -92,7 +104,7 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
 //   }
 
   return (
-    <div className="h-full w-full rounded-xl shadow-lg z-10 overflow-hidden flex flex-col glass-style-light">
+    <div className="calendar-container h-full w-full rounded-xl shadow-lg z-10 overflow-hidden flex flex-col glass-style-light">
       
       {/* Header Section (Month/Year Navigation) */}
       <div className="flex items-center justify-between p-2 shrink-0 rounded-t-xl glass-style">
@@ -142,25 +154,54 @@ export default function CalendarGrid({ logs, habits, selectedDate, setSelectedDa
               
               {/* The Summary Bar for multi-logs */}
               {hasLogs && (
-                <div className="w-full mt-1 flex flex-col gap-1">
-                  {Array.from(new Set(logsForDay.filter(log => log !== null).map(log => log.habitId))).map(habitId => {
-                    const habitLogs = logsForDay.filter(log => log !== null && log.habitId === habitId); 
-                    const totalLogs = habitLogs.length;
-                    const habit = habits.find(h => h.id === habitId);
-                    
-                    return (
-                      <div 
-                        key={habitId} 
-                        className="w-full rounded-md px-1 py-0.5 flex flex-col items-center shrink-0" 
-                        style={{ backgroundColor: habit?.color || '#eee', color: getContrastingTextColor(habit!.color) }}
-                      >
-                        <span className="text-[9px] font-bold leading-tight text-center w-full truncate">
-                          {habit?.name} {totalLogs > 1 && `(${totalLogs})`}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+                <>
+                  {/* Full Text View (min-width: 600px container width) */}
+                  <div className="calendar-full-view w-full mt-1 flex flex-col gap-1">
+                    {Array.from(new Set(logsForDay.filter(log => log !== null).map(log => log.habitId))).map(habitId => {
+                      const habitLogs = logsForDay.filter(log => log !== null && log.habitId === habitId); 
+                      const totalLogs = habitLogs.length;
+                      const habit = habits.find(h => h.id === habitId);
+                      
+                      return (
+                        <div 
+                          key={habitId} 
+                          className="w-full rounded-md px-1 py-0.5 flex flex-col items-center shrink-0" 
+                          style={{ backgroundColor: habit?.color || '#eee', color: getContrastingTextColor(habit!.color) }}
+                        >
+                          <span className="text-[9px] font-bold leading-tight text-center w-full truncate">
+                            {habit?.name} {totalLogs > 1 && `(${totalLogs})`}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Compact Badge View (< 600px container width) */}
+                  <div className="calendar-compact-view w-full mt-1 flex flex-row flex-wrap justify-center gap-1.5">
+                    {Array.from(new Set(logsForDay.filter(log => log !== null).map(log => log.habitId))).map(habitId => {
+                      const habitLogs = logsForDay.filter(log => log !== null && log.habitId === habitId); 
+                      const totalLogs = habitLogs.length;
+                      const habit = habits.find(h => h.id === habitId);
+                      const compactText = getCompactName(habit?.name);
+                      
+                      return (
+                        <div 
+                          key={habitId} 
+                          className="relative rounded-full w-6 h-6 flex items-center justify-center shrink-0 text-xs font-bold shadow-sm" 
+                          style={{ backgroundColor: habit?.color || '#eee', color: getContrastingTextColor(habit!.color) }}
+                          title={`${habit?.name}${totalLogs > 1 ? ` (${totalLogs})` : ''}`}
+                        >
+                          <span className="scale-90">{compactText}</span>
+                          {totalLogs > 1 && (
+                            <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full text-[8px] font-extrabold w-4 h-4 flex items-center justify-center border border-white z-20">
+                              {totalLogs}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
               )}
             </div>
           );

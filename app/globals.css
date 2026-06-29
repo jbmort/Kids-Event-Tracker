@@ -50,3 +50,25 @@ body {
   font-size: larger;
   font-weight: 600;
 }
+
+/* Container queries for responsive calendar items */
+.calendar-container {
+  container-type: inline-size;
+}
+
+.calendar-compact-view {
+  display: flex !important;
+}
+.calendar-full-view {
+  display: none !important;
+}
+
+@container (min-width: 600px) {
+  .calendar-compact-view {
+    display: none !important;
+  }
+  .calendar-full-view {
+    display: flex !important;
+  }
+}
+
