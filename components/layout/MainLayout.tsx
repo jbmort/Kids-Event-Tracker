@@ -102,7 +102,6 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
             habitFilter.some(h => h.id === log.habitId));
         }, [logs, habitFilter]);
 
-    // const isServerConnected = isOnline() && hasSuccessfulSync();
 
     const selectHabit = (habit: Habit) => {
       setSelectedHabitForLog(habit);
@@ -112,19 +111,6 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
     const toggleFilter = () => {
         setActiveFilter(!activeFilter);
     }
-
-    //  const handleAddHabitSuccess = async (newHabit: Habit, isNew: boolean) => {
-    //     if(isNew){
-    //         await submitHabit(newHabit);
-    //         setHabits((prev) => [...prev, newHabit]);
-    //     }else{
-    //         await updateHabit(newHabit.id, newHabit);
-    //         const otherHabits = habits.filter((habit) => habit.id !== newHabit.id)
-    //         setHabits([...otherHabits, ...[newHabit]]);
-    //     }
-    //     setIsAddHabitModalOpen(false);
-    //     await pullDataFromServer(USER_ID);
-    // };
 
     const handleAddHabitSuccess = (newHabit: Habit, isNew: boolean) => {
         if (isNew) {
@@ -147,22 +133,12 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
         // We use .then() instead of await so the UI never blocks while waiting for the network!
         pullDataFromServer(USER_ID).then((freshData) => {
         if (freshData) {
-            // Silently refresh the UI with the server truth once it resolves
             setHabits(freshData.habits);
             setHabitFilter(freshData.habits);
             setLogs(freshData.logs);
         }
     });
 };
-
-
-    //  const handleLogSuccess = async (newLog: Log) => {
-    //     await submitLog(newLog);
-    //     setLogs((prev) => [...prev, newLog]);
-    //     setIsLogModalOpen(false);
-    //     setSelectedHabitForLog(null);
-    //     await attemptBackgroundSync();
-    // };
 
     const handleLogSuccess = (newLog: Log) => {
         submitLog(newLog);
@@ -224,7 +200,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
                    
                     
                     {/* The calendar container safely fills the remaining space */}
-                    <div className="flex-1 min-h-0 overflow-hidden shadow-lg rounded-xl">
+                    <div className="flex-1 min-h-0 mb-1 overflow-hidden shadow-lg rounded-xl">
                         {children || <CalendarGrid logs={filteredLogs} habits={habitFilter} selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>}
                     </div>
                 </div>
@@ -235,11 +211,11 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
                 On desktop/tablet & landscape views: It renders as a standard inline side panel. */}
             <aside className={`
                 shrink-0 p-1.5 flex-col min-h-0 overflow-hidden z-30
-                w-full landscape:w-80 landscape:xl:w-96
+                w-full landscape:w-80 landscape:xl:w-96 landscape:flex
                 
                 /* Mobile Portrait Overlay State */
                 ${activeTab === 'logs' 
-                    ? 'flex absolute inset-x-0 top-16 bottom-[72px] bg-slate-900/10 backdrop-blur-md p-4 animate-in fade-in slide-in-from-bottom-6 duration-200' 
+                    ? 'flex absolute inset-x-0 top-16 bottom-[72px] backdrop-blur-md p-4 animate-in fade-in slide-in-from-bottom-6 duration-200' 
                     : 'hidden md:flex'
                 }
                 
@@ -270,7 +246,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
             </aside>
 
             {/* Mobile Navigation Tab Bar (visible only on mobile screen widths in portrait orientation) */}
-            <nav className="flex md:hidden landscape:hidden shrink-0 w-full bg-white/10 backdrop-blur-md border-t border-white/15 py-3 px-4 justify-around items-center z-40 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <nav className="flex md:hidden landscape:hidden shrink-0 w-full py-3 px-4 justify-around items-center z-40 ">
                 {MOBILE_TABS.map((tab) => (
                     <button
                         key={tab.id}
@@ -312,7 +288,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
             {/* Global Overlay/Notices */}
             <div className={`fixed bottom-20 right-4 landscape:bottom-4 md:bottom-4 md:right-4 px-3 py-1 rounded-full shadow-md border border-gray-200 text-xs font-medium z-50 ${
                 isServerConnected ? 'bg-[#6cff5969] border-green-500 text-green-700' : 'bg-[#ffffff67] text-gray-400 border-gray-200'
-            }`}>                Status: {isServerConnected ? 'Connected' : 'Offline'}
+            }`}>{isServerConnected ? 'Connected' : 'Offline'}
             </div>
         </main>
     );
