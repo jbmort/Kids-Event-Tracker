@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import CalendarGrid from '../calendar/CalendarGrid';
 import { submitHabit, submitLog, getAllHabits, getAllLogCache, hasSuccessfulSync, isOnline, attemptBackgroundSync, pullDataFromServer } from '@/services/localData';
 import { Habit, Log } from '@/lib/types';
@@ -184,13 +185,22 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
                 <div className="w-full max-w-7xl mx-auto flex flex-col h-full">
                     <div className='flex flex-row justify-between items-center'>
                     <h1 className="text-3xl font-bold text-[#3e22f49a] mb-1 ml-3 shrink-0">Body Journal</h1>
-                    <button
-                        onClick={toggleFilter}
-                        className="w-fit max-w-fit h-10 px-2 m-2 rounded-xl border-blue-300 text-[#3e22f49a]
-                         font-bold text-lg glass-style transition-colors shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)]"
-                    >
-                        Filter
-                    </button>
+                    <div className="flex gap-2 items-center">
+                        <Link
+                            href="/trends"
+                            className="w-fit max-w-fit h-10 px-3 py-1.5 rounded-xl border border-white/20 text-[#3e22f49a]
+                             font-bold text-lg glass-style transition-all hover:bg-white/20 active:scale-95 shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)] flex items-center justify-center"
+                        >
+                            Trends 📈
+                        </Link>
+                        <button
+                            onClick={toggleFilter}
+                            className="w-fit max-w-fit h-10 px-3 py-1.5 rounded-xl border border-white/20 text-[#3e22f49a]
+                             font-bold text-lg glass-style transition-all hover:bg-white/25 active:scale-95 shadow-[inset_-2px_-2px_5px_rgba(0,0,0,0.1),inset_2px_2px_4px_rgba(255,255,255,0.3)]"
+                        >
+                            Filter
+                        </button>
+                    </div>
                     </div>
                     { activeFilter &&
                     <div className="shrink-0 mb-1">
@@ -215,7 +225,7 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
                 
                 /* Mobile Portrait Overlay State */
                 ${activeTab === 'logs' 
-                    ? 'flex absolute inset-x-0 top-16 bottom-[72px] backdrop-blur-md p-4 animate-in fade-in slide-in-from-bottom-6 duration-200' 
+                    ? 'flex absolute inset-x-0 top-16 bottom-18 backdrop-blur-md p-4 animate-in fade-in slide-in-from-bottom-6 duration-200' 
                     : 'hidden md:flex'
                 }
                 
@@ -261,6 +271,13 @@ export default function MainLayout({ children }: { children?: React.ReactNode })
                         <span className="text-xs">{tab.label}</span>
                     </button>
                 ))}
+                <Link
+                    href="/trends"
+                    className="flex-1 flex flex-col items-center justify-center py-1.5 px-3 mx-1.5 rounded-xl transition-all duration-200 active:scale-95 border bg-white/10 text-white/70 border-white/10 hover:text-white/90 hover:bg-white/15 font-medium"
+                >
+                    <span className="text-xl mb-1">📈</span>
+                    <span className="text-xs">Trends</span>
+                </Link>
             </nav>
 
              {/* Add Habit Modal Overlay */}
