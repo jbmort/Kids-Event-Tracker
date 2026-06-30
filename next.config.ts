@@ -4,7 +4,7 @@ import withPWAInit from '@ducanh2912/next-pwa';
 const withPWA = withPWAInit({
   dest: 'public',              
   // Switch back to `process.env.NODE_ENV === 'development'` for normal coding.
-  disable: true, 
+  disable: false, 
   register: true,           
 });
 
